@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" href="static/thermometer.css">
+        <!--Bootstrap等をCDNから読み込み-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Rye&display=swap" rel="stylesheet"> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/screenfull.js/5.0.2/screenfull.min.js"></script>
+        <title>thermometer</title>
+    </head>
+    <body>
+        <section class="container-fluid" id="activate_container">
+            <video src="img/captain_movie.mp4" autoplay muted loop id="bg_video"></video>
+            <div id="activate_button_div">
+                <p>!AHOY!</p>
+                <img class="animate__animated animate__swing animate__infinite animate__slower" src="img/vehicle_ship01_01.png" onclick="start_fullscreen();" id="activate_button">
+            </div>
+        </section>
+
+        <section class="container-fluid" style="display: none" id="main_container">
+            <div class="row" id="thermometer_header">
+                <div class="col-12">
+                    <div id="clock">NOW TIME</div>
+                </div>
+            </div>
+            <div class="row" id="thermometer">
+                <div class="col-8 information">
+                    <div class="temperature" id="room_temperature">
+                        <div class="location">IN</div>
+                        <div class="temperature_value">
+                            <div id="room">0</div>
+                        </div>
+                    </div>
+                    <div class="temperature" id="outside_temperature">
+                        <div class="location">OUT</div>
+                        <div class="temperature_value">
+                            <div id="outside">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 character">
+                    <div class="character_comment">
+                        <!--台詞+吹き出し-->
+                        <div class="comment">
+                            <div class="balloon">
+                                <div id="comment_contents">寒すぎなんだワ</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="character_image">
+                        <img src="img/glad_captain.png" title="character_image" id="character_image_contents">
+                        <img src="img/dokurokun.png" title="exit_button" onclick="end_fullscreen();" id="exit_button">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            function start_fullscreen(){
+                screenfull.request();
+                const activate_container = document.getElementById("activate_container");
+                const bg_video = document.getElementById("bg_video");
+                const activate_button = document.getElementById("activate_button");
+                const main_container = document.getElementById("main_container");
+                const exit_button = document.getElementById("exit_button");
+                bg_video.pause();
+                activate_container.style = "display: none";
+                activate_button.style = "display: none";
+                main_container.style = "display: block";
+                exit_button.style = "display: inline";
+                main_container.classList.add("animate__animated", "animate__backInDown");
+            }
+            function end_fullscreen(){
+                screenfull.exit();
+                const activate_container = document.getElementById("activate_container");
+                const bg_video = document.getElementById("bg_video");
+                const activate_button = document.getElementById("activate_button");
+                const main_container = document.getElementById("main_container");
+                const exit_button = document.getElementById("exit_button");
+                bg_video.play();
+                activate_container.style = "display: block";
+                activate_button.style = "display: inline";
+                main_container.style = "display: none";
+                exit_button.style = "display: none";
+                main_container.classList.remove("animate__animated", "animate__backInDown");
+            }
+            function getNow() {
+                let now = new Date();
+                let year = now.getFullYear();
+                let mon = now.getMonth()+1; //１を足すこと
+                let day = now.getDate();
+                let hour = now.getHours();
+                let min = now.getMinutes();
+                if (hour<10) hour = "0" + hour;
+                if (min<10) min = "0" + min;
+                let now_datetime = year + "/" + mon + "/" + day + " " + hour + ":" + min; 
+                return now_datetime;
+            }
+            function updateclock() {
+                document.getElementById("clock").innerHTML = getNow();
+            }
+            function change_comment_and_characterimage(_temperature_json) {
+                const room_temp = _temperature_json.room;
+                let temp_feeling = function(){
+                    if (room_temp<=15) {
+                        return "cold";
+                    } else if (16<=room_temp&&room_temp<20) {
+                        return "good";
+                    } else if (20<=room_temp&&room_temp<26) {
+                        return "comfortable";
+                    } else if (26<=room_temp&&room_temp<30) {
+                        return "good";
+                    } else if (room_temp>=30) {
+                        return "hot";
+                    }
+                }
+                comments = {
+                    "cold":"寒すぎなんだワ", 
+                    "good":"悪くないんだワ", 
+                    "comfortable":"快適なんだワ", 
+                    "hot":"暑すぎなんだワ"
+                };
+                characterimages = {
+                    "cold":"img/sad_captain.png", 
+                    "good":"img/smile_captain.png", 
+                    "comfortable":"img/glad_captain.png", 
+                    "hot":"img/sad_captain.png"
+                };
+                document.getElementById("comment_contents").innerHTML = comments[temp_feeling()];
+                document.getElementById("character_image_contents").src = characterimages[temp_feeling()];
+            }
+            
+            // 時計の設定
+            updateclock();
+            // 初回以後は10秒毎にupdateclock()を実行　1分にしてしまうとタイミングが悪い時に表示が1分間ズレてしまう
+            timerID = setInterval("updateclock()",10000);
+
+            // SSEでローカルサーバーから情報を受け取る部分　リソースの読み込みが終わってから実行
+            // のはずだが動画等は全てロードできないのでsend_temperature.pyの@route("/sse")に小細工あり
+            window.addEventListener("load", function(){
+                let python_output = 0;
+                let es = new EventSource("/sse");
+                console.log("start")
+                let elem_room = document.getElementById("room");
+                let elem_outside = document.getElementById("outside");
+                es.addEventListener("message", function(event){
+                    //JSONのデータを受け取りオブジェクトに
+                    temperature_json = JSON.parse(event.data);
+                    elem_room.innerHTML = temperature_json.room
+                    if (temperature_json.outside != "nonevalue") {
+                        elem_outside.innerHTML = temperature_json.outside
+                    }
+                    //台詞の変化とキャラ画像の変化
+                    change_comment_and_characterimage(temperature_json);
+                });
+                //ウィンドウを閉じたら通信も閉じる
+                window.addEventListener("beforeunload", function() {
+                    es.close();
+                });
+            });
+        </script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+</html>

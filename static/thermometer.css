@@ -1,0 +1,213 @@
+/*フォント*/
+@font-face {
+    font-family: "puikko";
+    src: url("../img/puikko-Regular.otf")  format("opentype");
+}
+/*レイアウト*/
+html, body {
+    height: 100%;
+    width: 100%;
+    background-color: black;
+}
+.col-12 {
+    padding: 0px;
+}
+.col-8 {
+    padding: 0px;
+}
+.col-4 {
+    padding: 0px;
+}
+.container-fluid {
+    height: 100%;
+    width: 100%;
+}
+.information {
+    height: 100%;
+}
+.temperature {
+    position: relative;
+    width: 100%;
+    left: 0%;
+    display: flex;
+    font-family:  'Rye', cursive;
+}
+.location {
+    flex-basis: 20%;
+    font-size: 8vmin;
+    color: black;
+    top: 10%;
+    text-shadow:  2px  2px 1px rgb(255, 255, 255),
+    -2px  2px 1px rgb(255, 255, 255),
+    2px -2px 1px rgb(255, 255, 255),
+    -2px -2px 1px rgb(255, 255, 255);
+}
+.temperature_value {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    font-size: 20vmin;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow:  2px  2px 1px rgb(255, 255, 255),
+    -2px  2px 1px rgb(255, 255, 255),
+    2px -2px 1px rgb(255, 255, 255),
+    -2px -2px 1px rgb(255, 255, 255);
+    background-image: url(../img/frame.png);
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: black;
+}
+.comment {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translateX(-50%) translateY(-50%);
+}
+.character_comment {
+    position: relative;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 30%;
+}
+.character {
+    width: 100%;
+    height: 100%;  
+}
+.character_image {
+    top: 30%;
+    left: 0%;
+    height: 70%;
+}
+#activate_container {
+    background-image: url(../img/captain_flag_t.png); 
+    background-repeat: repeat;
+    background-color: black;
+}
+#bg_video {
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    filter: brightness(65%);
+    overflow: hidden;
+}
+#activate_button_div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+#activate_button_div p{
+    font-size: 6vmin;
+    font-family: "puikko";
+    text-align: center;
+    color: rgb(255, 255, 255);
+    text-shadow:  2px  2px 1px rgb(107, 5, 5),
+    -2px  2px 1px rgb(107, 5, 5),
+    2px -2px 1px rgb(107, 5, 5),
+    -2px -2px 1px rgb(107, 5, 5);
+    margin: 0px;
+}
+#activate_button {
+    max-width:25vmin;
+}
+#main_container {
+    background-image: url(../img/oldmap.png);
+    background-repeat: repeat-y;
+    background-size: 100%;
+}
+#thermometer_header {
+    height: 15%;
+}
+#clock {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    text-align: center;
+    font-family: 'Rye', cursive;
+    font-size: 11vmin;
+    text-shadow:  2px  2px 1px rgb(255, 255, 255),
+    -2px  2px 1px rgb(255, 255, 255),
+    2px -2px 1px rgb(255, 255, 255),
+    -2px -2px 1px rgb(255, 255, 255);
+    color: black;
+}
+#thermometer {
+    height: 85%;
+}
+#room_temperature {
+    position:relative;
+    height: 50%;
+    top: 0%;
+}
+#outside_temperature {
+    position: relative;
+    height: 50%;
+}
+#hukidashi {
+    width: 100%;
+    height: 100%;
+}
+#comment_contents {
+    font-size: 6vmin;
+    font-family: "puikko";
+    text-align: center;
+    color: rgb(202, 20, 54);
+    text-shadow:  1px  1px 0px rgb(51, 51, 51),
+    -1px  1px 0px rgb(51, 51, 51),
+    1px -1px 0px rgb(51, 51, 51),
+    -1px -1px 0px rgb(51, 51, 51);
+}
+#character_image_contents {
+    position: relative;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    height: 100%;
+    max-width: 100%;
+}
+#exit_button {
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    transform: translateX(-100%) translateY(-100%);
+    width: 80px;
+}
+
+/* 吹き出し*/
+.balloon {
+    position: relative;
+    margin: 1.5em 0;
+    padding: 2vmin 2vmin;
+    max-width: 100%;
+    color: #555;
+    background: #FFF;
+    border: solid 3px #555;
+    box-sizing: border-box;
+    border-radius: 1vmax;
+  } 
+  .balloon:before {
+    content: "";
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    margin-left: -15px;
+    border: 12px solid transparent;
+    border-top: 12px solid #FFF;
+    z-index: 2;
+  } 
+  .balloon:after {
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    margin-left: -17px;
+    border: 14px solid transparent;
+    border-top: 14px solid #555;
+    z-index: 1;
+  }
